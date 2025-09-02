@@ -29,10 +29,6 @@
         public static void aux(Integer obj, Integer actual, ArrayList<Integer> hist, PrintWriter printer ){
             hist.add(actual);
 
-            if((0>=actual)||(actual<obj)||(((actual%2)!=0)&&((actual%10)!=1))){
-                printer.println("NO");
-                return;
-            }
             if (obj.equals(actual)){
                 printer.println("YES");
                 printer.println(hist.size());
@@ -41,6 +37,10 @@
                     printer.print(hist.get(i)+" ");
                 }  
                 printer.println(); 
+                return;
+            }
+            if((actual<obj)||(((actual%2)!=0)&&((actual%10)!=1))){
+                printer.println("NO");
                 return;
             }
             if((actual%10)==1){
