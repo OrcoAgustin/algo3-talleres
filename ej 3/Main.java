@@ -21,6 +21,7 @@ public class Main {
         int r = scanner.nextInt();
         
         printer.print(contar(n,l,r,(long) 1,obtenerLargo(n)));       
+        printer.flush();
     }
 
     
