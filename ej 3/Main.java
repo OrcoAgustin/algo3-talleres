@@ -34,19 +34,17 @@ public class Main {
    
     public static Long contar(Long n, Integer l, Integer r, Long bordeIzq, Long bordeDer) {
         //si los bordes pedidos l y r caen fuera del numero que estamos operando
-        if((l<bordeIzq)||(r>bordeDer)){
+        if((r<bordeIzq)||(l>bordeDer)){
             return (long) 0;
         }
         //casos base
-        if(n<=1){
-
-            if((n==1) && (bordeIzq>=l) && (bordeDer<=r)){
-                return (long) 1;
-            }
-            else{
-            return (long) 0;
-            }
+        if(n==1) {
+            return (long) 1;
         }
+        if(n==0){
+            return (long) 0;
+        }
+        
         //paso recursivo
         long medio = bordeIzq+ obtenerLargo(n/2);
         long res = 0;
@@ -57,7 +55,7 @@ public class Main {
         res +=contar(n/2,l,r,medio+1,bordeDer);
         //caso del medio
         if(l<=medio && medio<=r){
-            res+=1;
+            res+=(n%2);
         }
         return res;
     }
