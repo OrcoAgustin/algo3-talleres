@@ -1,72 +1,55 @@
-import java.io.*;
-import java.util.*;
+    import java . io .*;
+    import java . util .*;
 
-public class Main {
-    public static void main ( String [] args ) {
-        //lector de entrada
-        BufferedReader br = new BufferedReader( 
-            new InputStreamReader(System.in)
-        );
-        //lector de salida
-        BufferedWriter bw = new BufferedWriter (
-            new OutputStreamWriter ( System . out )
-        );
-        //scanner
-        Scanner scanner = new Scanner(br);
-        //printer
-        PrintWriter printer = new PrintWriter(bw);
-    
-        ArrayList<Long> lista = new ArrayList<>();
+    public class Main {
+        public static void main ( String [] args ) {
+            //lector de entrada
+            BufferedReader br = new BufferedReader( 
+                new InputStreamReader(System.in)
+            );
+            //lector de salida
+            BufferedWriter bw = new BufferedWriter (
+                new OutputStreamWriter ( System . out )
+            );
+            //scanner
+            Scanner scanner = new Scanner(br);
+            //printer
+            PrintWriter printer = new PrintWriter(bw);
 
-        lista.add(scanner.nextLong()); //n
-        int l = scanner.nextInt();
-        int r = scanner.nextInt();
-        if(lista.get(0)!=0){
-        //operamos y devuelve lista "limpia"
-        lista = operarLista(lista,printer);
+            int a = scanner.nextInt(); //inicio 
+            int b = scanner.nextInt(); //objetivo
+            ArrayList<Integer> hist = new ArrayList<>(); //se guardan aca los valores que van pasando
 
-        //contamos
-        printer.print(contar(lista, (l-1), r));
-        printer.flush();
-        }
-        else{
-            //ahorra tiempo en caso borde
-            printer.print(0);
+            aux(a,b,hist, printer);
+
             printer.flush();
         }
-    }
 
-    public static ArrayList<Long> operarLista (ArrayList<Long> lista, PrintWriter printer){
-        boolean cambio = true;
-        while(cambio){
-            cambio = false;
-        
-            int i=0;
-            while(i<lista.size()){
-                Long valor = lista.get(i);
+        //funcion aux//
+        public static void aux(Integer obj, Integer actual, ArrayList<Integer> hist, PrintWriter printer ){
+            hist.add(actual);
 
-                if (valor>1){
-                    lista.remove(i);
-                    lista.add(i, (valor/2));    //entero 1
-                    lista.add((i+1), (valor%2)); //resto
-                    lista.add((i+2), (valor/2));    //entero 2
-                    i+=3;
-                    cambio = true;
-                }
-                else{
-                    i++;
-                }
+            if (obj.equals(actual)){
+                printer.println("YES");
+                printer.println(hist.size());
+                //loop para juntar la respuesta
+                for (int i = (hist.size()-1); i >= 0; i--) {
+                    printer.print(hist.get(i)+" ");
+                }  
+                printer.println(); 
+                return;
+            }
+            if((actual<obj)||(((actual%2)!=0)&&((actual%10)!=1))){
+                printer.println("NO");
+                return;
+            }
+            if((actual%10)==1){
+                aux(obj,(actual-1)/10,hist,printer);
+            }
+            
+            if((actual%2)==0){
+                aux(obj,actual/2,hist,printer);
             }
         }
-        return lista;        
     }
 
-    public static Integer contar(ArrayList<Long> lista, Integer l, Integer r) {
-        int suma = 0;
-
-        for (int i = l; i<r; i++ ){
-            suma += lista.get(i);
-        }
-        return suma;
-    }
-}
