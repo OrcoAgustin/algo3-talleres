@@ -28,7 +28,7 @@ public class Main {
         if(n<=1){
             return (long) 1;
         }
-        return obtenerLargo(obtenerLargo(n/2)+1+obtenerLargo(n/2));
+        return obtenerLargo(n/2)+1+obtenerLargo(n/2);
     }
    
     public static Long contar(Long n, Integer l, Integer r, Long bordeIzq, Long bordeDer) {
@@ -60,6 +60,9 @@ public class Main {
         }
         return res;
     }
+}
+
+
 
 
     //esto da problemas al iterar toda la lista se puede hacer muy costoso
@@ -105,4 +108,4 @@ public class Main {
         return suma;
     }
     */
-}
+
