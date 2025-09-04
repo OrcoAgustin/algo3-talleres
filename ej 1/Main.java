@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -20,8 +21,20 @@ public class Main {
         //printer
         PrintWriter printer = new PrintWriter(bw);
 
-        String var = scanner.nextLine();
+        ArrayList<Integer> respuestas = new ArrayList<>();
+        
+        int casosDeTest = scanner.nextInt();
+        for (int i = 0; i < casosDeTest; i++) {
+            int largo = scanner.nextInt();
+            String cadena = scanner.next();
+            respuestas.add(contarL(cadena, 'a'));
+        }
 
+        for (int i = 0; i < respuestas.size(); i++) {
+            printer.print(respuestas.get(i));
+            printer.println("");
+        }
+        printer.flush();
     }
 
 
@@ -62,7 +75,7 @@ public class Main {
         
         return Math.min(izqEsLindo, derEsLindo);
     }
-
+}
     //claro, mejor contar en vez de chequear que sea L- lindo
     //listo, que capo soy
     /*
@@ -106,4 +119,4 @@ public class Main {
         return false;
     }
     */
-}
+
