@@ -22,19 +22,57 @@ public class Main {
 
         String var = scanner.nextLine();
 
-        // tomo en principio y final de la string valores para ver si algun lado es "l"
-        printer.println("es "+var.charAt(var.length()-1)+ "-lindo: "+esLindo(var,var.charAt(var.length()-1)));
-        printer.println("es "+var.charAt(0)+ "-lindo: "+esLindo(var,var.charAt(0)));
-        printer.flush();
-    
     }
 
+
+    public static int contarL(String cadena, char letra){
+
+        //Caso base
+        if (cadena.length()==1){
+            if (cadena.charAt(0)==letra){
+                return 0;
+            }else{
+                return 1;
+            }
+        }
+
+        String izq = cadena.substring(0,cadena.length()/2);
+        String der = cadena.substring(cadena.length()/2, cadena.length());
+
+        int cambiosIzq = 0;
+        int cambiosDer = 0;
+
+        //cuento cantidad de cambios a realizar en el izq para hacerlo L lindo
+        for (int i = 0; i < izq.length(); i++) {
+            if (izq.charAt(i)!=letra){
+                cambiosIzq +=1;
+            }
+        }
+
+        //misma pero derecha
+        for (int i = 0; i < der.length(); i++) {
+            if (der.charAt(i)!=letra){
+                cambiosDer +=1;
+            }
+        }
+        
+        //recursion
+        int izqEsLindo = cambiosIzq +contarL(der, (char)(letra+1));        
+        int derEsLindo = cambiosDer +contarL(izq, (char)(letra+1));        
+        
+        return Math.min(izqEsLindo, derEsLindo);
+    }
+
+    //claro, mejor contar en vez de chequear que sea L- lindo
+    //listo, que capo soy
+    /*
     public static boolean esLindo(String cadena, char letra){
         //caso base
         if (cadena.length() == 1){
             char v = cadena.charAt(0);
             return (v==letra);
         }
+
         String izq = cadena.substring(0,cadena.length()/2);
         String der = cadena.substring(cadena.length()/2, cadena.length());
 
@@ -67,4 +105,5 @@ public class Main {
         //no es ninguna de los 3
         return false;
     }
+    */
 }
