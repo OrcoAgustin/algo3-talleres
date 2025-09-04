@@ -17,8 +17,8 @@ public class Main {
         PrintWriter printer = new PrintWriter(bw);
     
         long n = scanner.nextLong();
-        int l = scanner.nextInt();
-        int r = scanner.nextInt();
+        long l = scanner.nextLong();
+        long  r = scanner.nextLong();
         
         printer.print(contar(n,l,r,(long) 1,obtenerLargo(n)));       
         printer.flush();
@@ -29,10 +29,11 @@ public class Main {
         if(n<=1){
             return (long) 1;
         }
-        return obtenerLargo(n/2)+1+obtenerLargo(n/2);
+        long largo = obtenerLargo(n/2);
+        return 2*largo + 1;
     }
    
-    public static Long contar(Long n, Integer l, Integer r, Long bordeIzq, Long bordeDer) {
+    public static Long contar(Long n, Long l, Long r, Long bordeIzq, Long bordeDer) {
         //si los bordes pedidos l y r caen fuera del numero que estamos operando
         if((r<bordeIzq)||(l>bordeDer)){
             return (long) 0;
@@ -44,7 +45,7 @@ public class Main {
         if(n==0){
             return (long) 0;
         }
-        
+
         //paso recursivo
         long medio = bordeIzq+ obtenerLargo(n/2);
         long res = 0;
