@@ -11,7 +11,7 @@ public class Main {
     //creo las var como static para poder llamarlas de cualq lado
     public static ArrayList<StringBuilder> strings = new ArrayList<StringBuilder>();
     public static ArrayList<StringBuilder> stringsInvertidos = new ArrayList<StringBuilder>();
-    public static ArrayList<Integer> costos = new ArrayList<Integer>();
+    public static ArrayList<Long> costos = new ArrayList<Long>();
     public static Long INF = Long.MAX_VALUE; 
     public static Long [][] memo = null;
     public static int n = 0;
@@ -37,7 +37,7 @@ public class Main {
 
 
         for (int i = 0; i < n; i++) {
-            costos.add(scanner.nextInt());
+            costos.add(scanner.nextLong());
         }
         //saltea al final de la linea de los numeros
         scanner.nextLine();
@@ -75,20 +75,24 @@ public class Main {
         }
 
         Long mejor = INF;
+        String prev = strings.get(i-1).toString();
+        String prevInv = stringsInvertidos.get(i-1).toString();
+        String actual = strings.get(i).toString();
+        String actualInv = stringsInvertidos.get(i).toString();
 
         if(estado ==0){
             //si el compareto da <=0 quiere decir que es lexicograficamente meno el primero, 0 si son iguales, >0 si el segundo es mas chico (caso q no queres)  
-            if(((strings.get(i-1)).compareTo(strings.get(i)))<=0){
+            if(((prev).compareTo(actual))<=0){
                 mejor= Math.min(mejor,alf((i-1),0));
             }
-            if(((stringsInvertidos.get(i-1)).compareTo(strings.get(i)))<=0){
+            if(((prevInv).compareTo(actual))<=0){
                 mejor= Math.min(mejor,alf((i-1),1));
             }
         }else{
-            if(((strings.get(i-1)).compareTo(stringsInvertidos.get(i)))<=0){
+            if(((prev).compareTo(actualInv))<=0){
                 mejor= Math.min(mejor,alf((i-1),0)+costos.get(i));
             }
-            if(((stringsInvertidos.get(i-1)).compareTo(stringsInvertidos.get(i)))<=0){
+            if(((prevInv).compareTo(actualInv))<=0){
                 mejor= Math.min(mejor,alf((i-1),1)+costos.get(i));
             }
         }
