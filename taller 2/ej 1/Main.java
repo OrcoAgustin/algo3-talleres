@@ -12,7 +12,7 @@ public class Main {
     public static ArrayList<StringBuilder> strings = new ArrayList<StringBuilder>();
     public static ArrayList<StringBuilder> stringsInvertidos = new ArrayList<StringBuilder>();
     public static ArrayList<Long> costos = new ArrayList<Long>();
-    public static Long INF = Long.MAX_VALUE; 
+    public static Long INF = Long.MAX_VALUE/4; //sino se rompe todo x size 
     public static Long [][] memo = null;
     public static int n = 0;
     
@@ -32,6 +32,12 @@ public class Main {
 
         //inputs
         n = scanner.nextInt();
+        //si n = 0 de entrada se rompe
+        if (n==0){
+            printer.print(0);
+            printer.flush();
+            return;
+        }
         //inicializar memo 
         memo = new Long[n][2];
 
