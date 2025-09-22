@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Main {
-    public static Integer[][] memo = null; //tiene l y r para determinar de donde me conviene acceder
+    public static Integer [][] memo = null; //tiene l y r para determinar de donde me conviene acceder
   
     
     public static void main ( String [] args ) {
@@ -29,25 +29,18 @@ public class Main {
 
         //incializo memo
         memo = new Integer[n][n];
-
+       
         printer.print(contar(s, 0, n-1));
         printer.flush();
     }
 
-    public static Integer contar (String s, Integer l , Integer r){
+    public static int contar (String s, int l , int r){
         //memo  
         if(memo[l][r] != null){
             return memo[l][r];
         }
         
         //casos bases
-        if (s.length()==0){
-            return 0;   
-        }
-        if (s.length()==1){
-            return 1;   
-        }
-
         if(l > r){
             return 0;
         }
@@ -57,12 +50,12 @@ public class Main {
 
         //rec
         //borro s[l]   
-        Integer res = 1 + contar(s, (l+1), r);
+        int res = 1 + contar(s, (l+1), r);
 
         //busco si se puede combinar    
         for (int i = l+1; i <=r; i++) {
             if(s.charAt(i)==s.charAt(l)){
-                res = Math.min(res, contar(s,(l+1),(r-1)));
+                res = Math.min(res, contar(s,(l+1),(i-1)) + contar(s, i, r));
             }
         }
         memo[l][r] = res;
@@ -73,5 +66,5 @@ public class Main {
     //es imposible hacerlo en tiempo sin algun borde o algo
     //agrego l y r
     //fijate post almuerzo si va bien
+
 }
-   
