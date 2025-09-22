@@ -23,13 +23,23 @@ public class Main {
         //printer
         PrintWriter printer = new PrintWriter(bw);
 
+        //datos
         Integer n = scanner.nextInt();
         String s = scanner.next();
 
+        //incializo memo
+        memo = new Integer[n][n];
 
+        printer.print(contar(s, 0, n-1));
+        printer.flush();
     }
 
-    public static Integer contar (String s ){
+    public static Integer contar (String s, Integer l , Integer r){
+        //memo  
+        if(memo[l][r] != null){
+            return memo[l][r];
+        }
+        
         //casos bases
         if (s.length()==0){
             return 0;   
@@ -38,11 +48,30 @@ public class Main {
             return 1;   
         }
 
+        if(l > r){
+            return 0;
+        }
+        if(l == r){
+            return 1;
+        }
 
-        return 0;
+        //rec
+        //borro s[l]   
+        Integer res = 1 + contar(s, (l+1), r);
+
+        //busco si se puede combinar    
+        for (int i = l+1; i <=r; i++) {
+            if(s.charAt(i)==s.charAt(l)){
+                res = Math.min(res, contar(s,(l+1),(r-1)));
+            }
+        }
+        memo[l][r] = res;
+        return res;
     }
 
+    //borrar el string no sirve, asi que tenes que o copiarlo en cada paso, o encontrar la forma de no borrarlo
     //es imposible hacerlo en tiempo sin algun borde o algo
-    //agregar l y r? pensalo post almuerzo
+    //agrego l y r
+    //fijate post almuerzo si va bien
 }
    
