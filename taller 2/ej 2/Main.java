@@ -41,5 +41,8 @@ public class Main {
 
         return 0;
     }
+
+    //es imposible hacerlo en tiempo sin algun borde o algo
+    //agregar l y r? pensalo post almuerzo
 }
    
