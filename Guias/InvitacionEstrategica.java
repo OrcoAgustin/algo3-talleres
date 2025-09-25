@@ -4,7 +4,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.*;
 
-public class InvitadosOptimos {
+//EJERCICIO 36 GUIA 2
+public class InvitacionEstrategica {
     
     public static ArrayList<Integer> candidatos = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
     public static ArrayList<par<Integer, Integer>> conflictos = new ArrayList<>();
