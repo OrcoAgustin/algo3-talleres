@@ -76,7 +76,7 @@ public class Main {
         printer.print("el nivel donde se encontro fue: " + nivel);
         printer.flush();
         */
-        return nivel-1;  
+        return nivel;  
         
     }
 }
