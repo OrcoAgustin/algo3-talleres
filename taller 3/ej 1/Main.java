@@ -33,6 +33,7 @@ public class Main {
     public static int bfsDesdeRaiz(int raiz, int lim){
 
         HashSet<Integer> memo = new HashSet<>();
+        memo.add(raiz);
 
         boolean alcanzado = false;
 
@@ -48,28 +49,27 @@ public class Main {
             for (int i = 0; i < prevNivel.size(); i++) {
                 
                 Integer nodo = prevNivel.get(i);
-                
-                if(!memo.contains(i)){
-                    boolean alcanzablePorDerecha = true;
-                    if (nodo > lim){
-                        alcanzablePorDerecha = false;
-                    }
-
-                    if(alcanzablePorDerecha){
-                        nuevoNivel.add(nodo*2);
-                    }
-                    
-                    if (nodo>1){
-                        nuevoNivel.add(nodo-1);
-                    }
-
-                    //se alcanzo?
-                    if (nodo*2 == lim || nodo-1 == lim){
-                        alcanzado=true;
-                    }
+                        
+                boolean alcanzablePorDerecha = true;
+                if (nodo > lim){
+                    alcanzablePorDerecha = false;
                 }
 
-                memo.add(nodo);
+                if(alcanzablePorDerecha && !memo.contains(nodo*2)){
+                    nuevoNivel.add(nodo*2);
+                    memo.add(nodo*2);
+                }
+                
+                if (nodo>1 && !memo.contains(nodo-1)){
+                    nuevoNivel.add(nodo-1);
+                    memo.add(nodo-1);
+                }
+
+                //se alcanzo?
+                if (nodo*2 == lim || nodo-1 == lim){
+                    alcanzado=true;
+                }
+                
             }   
             
             prevNivel = nuevoNivel;
