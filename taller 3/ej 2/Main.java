@@ -106,10 +106,16 @@ public class Main {
             
             //calculamos el tiempo de salida
             int tiempoSalida = tiempoActual;
-            for (int i = 0; i < matrizDeConflictos[planetaActual].size(); i++) {
-                if (tiempoSalida == matrizDeConflictos[planetaActual].get(i)){
-                    tiempoSalida += 1;
+            int indice = 0;
+            while(indice < matrizDeConflictos[planetaActual].size()){
+                int conflicto = matrizDeConflictos[planetaActual].get(indice);
+                if(conflicto==tiempoSalida){
+                    tiempoSalida +=1;
                 }
+                else if(conflicto > tiempoSalida ){
+                    break;
+                }
+                indice++;
             }
 
             for (int i = 0; i < listaDeAdyacencia[planetaActual].size(); i++) {
@@ -129,13 +135,35 @@ public class Main {
         //inalcanzable el destino
         return -1;
     }
-    
+   
+
 }
 
 
 
+ /*
+    public static int encontrarTiempo(int tiempoLlegada, int planetaActual, ArrayList<Integer[]>[] listaDeAdyacencia, ArrayList<Integer>[] matrizDeConflictos ){ 
+        int tiempoSalida = tiempoLlegada;
+        
+        boolean encontrado = false;
+        int indice =matrizDeConflictos[planetaActual].size();
+        while(!encontrado){
+            if(indice/2 == tiempoSalida){
+                tiempoSalida +=1;
+            }
+        }
 
+        return tiempoSalida;
+    }        
+ */
 
+/* 
+        for (int i = 0; i < matrizDeConflictos[planetaActual].size(); i++) {
+            if (tiempoSalida == matrizDeConflictos[planetaActual].get(i)){
+                tiempoSalida += 1;
+            }
+        }
+        */
 
 
 /* printer de input
