@@ -76,22 +76,22 @@ public class Main {
     
         int n = listaDeAdyacencia.length;
         //almacenar (tiempo, planeta)
-        PriorityQueue<long[]> restantes = new PriorityQueue<>(
-            (a, b) -> Long.compare(a[0], b[0]) 
+        PriorityQueue<int[]> restantes = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a[0], b[0]) 
         );
 
-        long[] res = new long[n];
+        int[] res = new int[n];
         for (int i = 0; i < n; i++) {
-            res[i] = Long.MAX_VALUE;
+            res[i] = Integer.MAX_VALUE;
         }
         res[0] = 0;
 
-        restantes.add(new long[]{0,0});
+        restantes.add(new int[]{0,0});
 
         while(!restantes.isEmpty()){
             
-            long[] actual = restantes.poll();
-            long tiempoActual = (int) actual[0];
+            int[] actual = restantes.poll();
+            int tiempoActual = actual[0];
             int planetaActual= (int) actual[1];
 
             //ya calculado?
@@ -105,7 +105,7 @@ public class Main {
             }
             
             //calculamos el tiempo de salida
-            long tiempoSalida = tiempoActual;
+            int tiempoSalida = tiempoActual;
             for (int i = 0; i < matrizDeConflictos[planetaActual].size(); i++) {
                 if (tiempoSalida == matrizDeConflictos[planetaActual].get(i)){
                     tiempoSalida += 1;
@@ -117,11 +117,11 @@ public class Main {
                 int planetaDestino = (int) listaDeAdyacencia[planetaActual].get(i)[0];
                 int costoDeViaje = (int) listaDeAdyacencia[planetaActual].get(i)[1];
                  
-                long nuevoTiempoDeLlegada = tiempoSalida + costoDeViaje;
+                int nuevoTiempoDeLlegada = tiempoSalida + costoDeViaje;
 
                 if (nuevoTiempoDeLlegada < res[planetaDestino]){
                     res[planetaDestino] = nuevoTiempoDeLlegada;
-                    restantes.add(new long[]{nuevoTiempoDeLlegada,planetaDestino});
+                    restantes.add(new int[]{nuevoTiempoDeLlegada,planetaDestino});
                 }
             }
         }
