@@ -164,37 +164,39 @@ public class Main {
             return tiempoSalida;
         }
 
-        int indice = busquedaBinaria(matrizDeConflictos[planetaActual], tiempoSalida);
+        int izquierda = 0;
+        int derecha = matrizDeConflictos[planetaActual].size()-1;
 
-        //antes del primer intervalo
-        if(indice == 0){
-            if(tiempoSalida < matrizDeConflictos[planetaActual].get(indice)[0]){
+        while(izquierda <= derecha){
+            int medio = (izquierda + derecha)/2;
+            
+            if(tiempoSalida < matrizDeConflictos[planetaActual].get(medio)[0]){
+                derecha = medio + 1; 
+            }
+            else if(tiempoSalida > matrizDeConflictos[planetaActual].get(medio)[0]){
+                izquierda = medio + 1; 
+            }
+            else{
+                tiempoSalida=matrizDeConflictos[planetaActual].get(medio)[1] + 1;
                 return tiempoSalida;
-            }else{
-                return matrizDeConflictos[planetaActual].get(indice)[1] + 1;
             }
         }
-
-        //si el conflicto esta atras
-        if(indice > 0){
-            if(tiempoSalida <= matrizDeConflictos[planetaActual].get(indice-1)[1] && 
-            tiempoSalida >= matrizDeConflictos[planetaActual].get(indice-1)[0]){
-                    return matrizDeConflictos[planetaActual].get(indice)[1] + 1;
-            }
-        }
-
-        //si el conflicto esta adelante
-        if(indice < matrizDeConflictos[planetaActual].size()){
-            if(tiempoSalida <= matrizDeConflictos[planetaActual].get(indice)[1] && 
-            tiempoSalida >= matrizDeConflictos[planetaActual].get(indice)[0]){
-                    return matrizDeConflictos[planetaActual].get(indice)[1] + 1;
-            }
-        }        
-
         return tiempoSalida;
     }
+}
+//idea magistral, cambia la f de encontrar tiempo y sumale busqueda binaria adentro
+//descenso a la locura, ya no se que es
 
-    public static int busquedaBinaria(ArrayList<Long[]> lista, long objetivo){
+//ya no se que mas optimizar, memo en dijkstra?!?!?!?!?!?!?!?
+
+
+//Nota:
+//repensar conflictos? si los ves como una tupla, podes ahorrarte tiempo con las busqeudas no?
+
+
+/* MAS LEGACY!1!1!1!
+
+public static int busquedaBinaria(ArrayList<Long[]> lista, long objetivo){
         
         int izquierda = 0;
         int derecha = lista.size();
@@ -214,16 +216,7 @@ public class Main {
 
         return izquierda;
     }
-}
-
-//descenso a la locura, ya no se que es
-
-//ya no se que mas optimizar, memo en dijkstra?!?!?!?!?!?!?!?
-
-
-//Nota:
-//repensar conflictos? si los ves como una tupla, podes ahorrarte tiempo con las busqeudas no?
-
+} */
 //LOS INT TIENEN LIMITE; CABEZA DE TERMO USA LONG :)
 
  /*
