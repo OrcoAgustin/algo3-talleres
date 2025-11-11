@@ -92,7 +92,7 @@ public class Main {
             
             int[] actual = restantes.poll();
             int tiempoActual = actual[0];
-            int planetaActual= (int) actual[1];
+            int planetaActual= actual[1];
 
             //ya calculado?
             if(tiempoActual > res[planetaActual]){
@@ -105,23 +105,14 @@ public class Main {
             }
             
             //calculamos el tiempo de salida
-            int tiempoSalida = tiempoActual;
-            int indice = 0;
-            while(indice < matrizDeConflictos[planetaActual].size()){
-                int conflicto = matrizDeConflictos[planetaActual].get(indice);
-                if(conflicto==tiempoSalida){
-                    tiempoSalida +=1;
-                }
-                else if(conflicto > tiempoSalida ){
-                    break;
-                }
-                indice++;
-            }
+            int tiempoSalida = encontrarTiempo(tiempoActual, planetaActual, listaDeAdyacencia, matrizDeConflictos);
+            
 
+            
             for (int i = 0; i < listaDeAdyacencia[planetaActual].size(); i++) {
                 //primero: planeta, segundo: costo de llegar
-                int planetaDestino = (int) listaDeAdyacencia[planetaActual].get(i)[0];
-                int costoDeViaje = (int) listaDeAdyacencia[planetaActual].get(i)[1];
+                int planetaDestino = listaDeAdyacencia[planetaActual].get(i)[0];
+                int costoDeViaje =  listaDeAdyacencia[planetaActual].get(i)[1];
                  
                 int nuevoTiempoDeLlegada = tiempoSalida + costoDeViaje;
 
@@ -135,8 +126,56 @@ public class Main {
         //inalcanzable el destino
         return -1;
     }
-   
+    
+    public static int encontrarTiempo(int tiempoLlegada, int planetaActual, ArrayList<Integer[]>[] listaDeAdyacencia, ArrayList<Integer>[] matrizDeConflictos ){ 
+        //si le implementas busqueda binaria en otra f re sale segun tobi
+        int tiempoSalida = tiempoLlegada;
+        //catch por si esta vacia
 
+        if(matrizDeConflictos[planetaActual].isEmpty()){
+            return tiempoSalida;
+        }
+
+        int indice = busquedaBinaria(matrizDeConflictos[planetaActual], tiempoSalida);
+
+        if(indice == -1){
+            return tiempoLlegada;
+        }
+
+        while(indice < matrizDeConflictos[planetaActual].size()){
+            int conflicto = matrizDeConflictos[planetaActual].get(indice);
+            if(conflicto==tiempoSalida){
+                tiempoSalida ++;
+                indice ++;
+            }
+            else if(conflicto > tiempoSalida ){
+                break;
+            }
+        }
+        
+        return tiempoSalida;
+    }
+
+    public static int busquedaBinaria(ArrayList<Integer> lista, int objetivo){
+        
+        int izquierda = 0;
+        int derecha = lista.size()-1;
+
+        while (izquierda < derecha){
+            int indice = (izquierda + (derecha-izquierda))/2;
+
+            int valor = lista.get(indice);
+
+            if(valor < objetivo){
+                izquierda = indice + 1;
+            }
+            else{
+                derecha = indice ;
+            }
+        }
+
+        return izquierda;
+    }
 }
 
 
