@@ -137,17 +137,18 @@ public class Main {
 
         int indice = busquedaBinaria(matrizDeConflictos[planetaActual], tiempoSalida);
 
-        while(indice < matrizDeConflictos[planetaActual].size()){
-            long conflicto = matrizDeConflictos[planetaActual].get(indice);
-            if(conflicto==tiempoSalida){
-                tiempoSalida ++;
-                indice ++;
-            }
-            else if(conflicto > tiempoSalida ){
-                break;
-            }
+        //catch del out of bounds
+        if (indice == matrizDeConflictos[planetaActual].size()) {
+            return tiempoLlegada;
         }
-        
+
+        if(matrizDeConflictos[planetaActual].get(indice) > tiempoLlegada){
+            return tiempoLlegada;
+        }
+
+        int hueco = encontrarDisponibilidad(matrizDeConflictos[planetaActual], indice);
+       
+        tiempoSalida = matrizDeConflictos[planetaActual].get(hueco) + 1;
         return tiempoSalida;
     }
 
@@ -157,7 +158,7 @@ public class Main {
         int derecha = lista.size();
 
         while (izquierda < derecha){
-            int indice = (izquierda + (derecha-izquierda))/2;
+            int indice = izquierda + (derecha-izquierda) /2;
 
             long valor = lista.get(indice);
 
@@ -171,7 +172,32 @@ public class Main {
 
         return izquierda;
     }
+
+    public static int encontrarDisponibilidad(ArrayList<Long> lista, int inicio){
+        //es como una busqueda binaria pero particular
+        //devuelve el primer hueco que encuentre
+        int izquierda = inicio;
+        int derecha = lista.size()-1;
+
+        int utlimoConflictoValido = izquierda;
+        long valorIzquierda = lista.get(inicio);
+
+        while(izquierda <= derecha){
+            int medio = izquierda + (derecha - izquierda) /2;
+
+            if(lista.get(medio) == valorIzquierda + (medio - inicio)){
+                utlimoConflictoValido = medio;
+                izquierda = medio + 1;
+            }
+            else{
+                derecha = medio -1;
+            }
+        }
+    return utlimoConflictoValido;
+    }
 }
+
+
 
 //LOS INT TIENEN LIMITE; CABEZA DE TERMO USA LONG :)
 
