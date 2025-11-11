@@ -46,22 +46,38 @@ public class Main {
         }
     
 
-        //conflictos
+        //conflictos v2
 
-        //indice es planeta-1 y los valores son los momentos donde esta ocupado
-        ArrayList<Long>[] matrizDeConflictos = new ArrayList[n];
+        //indice es planeta-1 y las tuplas son donde empieza la ventana de ocupacion y donde termina
+        ArrayList<Long[]>[] matrizDeConflictos = new ArrayList[n];
         
         for (int i = 0; i < n; i++) {
-            ArrayList<Long>  nuevaLinea = new ArrayList<>();
-
             int cantidadDeConflictos = scanner.nextInt();
-            for (int j = 0; j < cantidadDeConflictos ; j++) {
-                long nuevoNum = scanner.nextLong();
-                nuevaLinea.add(nuevoNum);  
-              
+            ArrayList<Long[]> nuevaLinea = new ArrayList<>();
+
+            if (cantidadDeConflictos == 0) {
+                matrizDeConflictos[i] = nuevaLinea;
+                continue;
             }
 
-            matrizDeConflictos[i]=nuevaLinea;
+            long inicio = scanner.nextLong();
+            long anterior = inicio;
+
+            for (int j = 1; j < cantidadDeConflictos; j++) {
+                long actual = scanner.nextLong();
+
+                if (actual == anterior + 1) {
+                    anterior = actual; 
+                } else {
+                    
+                    nuevaLinea.add(new Long[]{inicio, anterior});
+                    inicio = actual;
+                    anterior = actual;
+                }
+            }
+
+            nuevaLinea.add(new Long[]{inicio, anterior});
+            matrizDeConflictos[i] = nuevaLinea;
         }
 
 
@@ -69,7 +85,7 @@ public class Main {
         printer.flush();
     }
 
-    public static long pasosHastaM(ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long>[] matrizDeConflictos){
+    public static long pasosHastaM(ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long[]>[] matrizDeConflictos){
         //dijkstra v2 (echu's dream)
         //proba si pasa con matriz, sino sufrimos con la queue
         //yo del futuro: no funciona. Usa queue
@@ -86,6 +102,13 @@ public class Main {
         }
         res[0] = 0L;
 
+        //memo
+        long[] memo = new long[n];
+        for (int i = 0; i < n; i++) {
+            memo[i] = -1;
+        }
+
+
         restantes.add(new long[]{0L,0L});
 
         while(!restantes.isEmpty()){
@@ -93,6 +116,12 @@ public class Main {
             long[] actual = restantes.poll();
             long tiempoActual = actual[0];
             int planetaActual = (int) actual[1];
+
+            //ahorraria mas tiempo asi?
+            if(memo[planetaActual] != -1 && tiempoActual >=memo[planetaActual]){
+                continue;
+            }
+            memo[planetaActual] = tiempoActual;
 
             //ya calculado?
             if(tiempoActual > res[planetaActual]){
@@ -126,7 +155,7 @@ public class Main {
     }
     
     //CREO el problema esta aca, es lineal toma demasiado. Pensa como mejorarlo
-    public static long encontrarTiempo(long  tiempoLlegada, int planetaActual, ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long>[] matrizDeConflictos ){ 
+    public static long encontrarTiempo(long  tiempoLlegada, int planetaActual, ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long[]>[] matrizDeConflictos ){ 
         //si le implementas busqueda binaria en otra f re sale segun tobi
         long tiempoSalida = tiempoLlegada;
 
@@ -137,22 +166,35 @@ public class Main {
 
         int indice = busquedaBinaria(matrizDeConflictos[planetaActual], tiempoSalida);
 
-        //catch del out of bounds
-        if (indice == matrizDeConflictos[planetaActual].size()) {
-            return tiempoLlegada;
+        //antes del primer intervalo
+        if(indice == 0){
+            if(tiempoSalida < matrizDeConflictos[planetaActual].get(indice)[0]){
+                return tiempoSalida;
+            }else{
+                return matrizDeConflictos[planetaActual].get(indice)[1] + 1;
+            }
         }
 
-        if(matrizDeConflictos[planetaActual].get(indice) > tiempoLlegada){
-            return tiempoLlegada;
+        //si el conflicto esta atras
+        if(indice > 0){
+            if(tiempoSalida <= matrizDeConflictos[planetaActual].get(indice-1)[1] && 
+            tiempoSalida >= matrizDeConflictos[planetaActual].get(indice-1)[0]){
+                    return matrizDeConflictos[planetaActual].get(indice)[1] + 1;
+            }
         }
 
-        int hueco = encontrarDisponibilidad(matrizDeConflictos[planetaActual], indice);
-       
-        tiempoSalida = matrizDeConflictos[planetaActual].get(hueco) + 1;
+        //si el conflicto esta adelante
+        if(indice < matrizDeConflictos[planetaActual].size()){
+            if(tiempoSalida <= matrizDeConflictos[planetaActual].get(indice)[1] && 
+            tiempoSalida >= matrizDeConflictos[planetaActual].get(indice)[0]){
+                    return matrizDeConflictos[planetaActual].get(indice)[1] + 1;
+            }
+        }        
+
         return tiempoSalida;
     }
 
-    public static int busquedaBinaria(ArrayList<Long> lista, long objetivo){
+    public static int busquedaBinaria(ArrayList<Long[]> lista, long objetivo){
         
         int izquierda = 0;
         int derecha = lista.size();
@@ -160,7 +202,7 @@ public class Main {
         while (izquierda < derecha){
             int indice = izquierda + (derecha-izquierda) /2;
 
-            long valor = lista.get(indice);
+            long valor = lista.get(indice)[0];
 
             if(valor < objetivo){
                 izquierda = indice + 1;
@@ -172,30 +214,12 @@ public class Main {
 
         return izquierda;
     }
-
-    public static int encontrarDisponibilidad(ArrayList<Long> lista, int inicio){
-        //es como una busqueda binaria pero particular
-        //devuelve el primer hueco que encuentre
-        int izquierda = inicio;
-        int derecha = lista.size()-1;
-
-        int utlimoConflictoValido = izquierda;
-        long valorIzquierda = lista.get(inicio);
-
-        while(izquierda <= derecha){
-            int medio = izquierda + (derecha - izquierda) /2;
-
-            if(lista.get(medio) == valorIzquierda + (medio - inicio)){
-                utlimoConflictoValido = medio;
-                izquierda = medio + 1;
-            }
-            else{
-                derecha = medio -1;
-            }
-        }
-    return utlimoConflictoValido;
-    }
 }
+
+//descenso a la locura, ya no se que es
+
+//ya no se que mas optimizar, memo en dijkstra?!?!?!?!?!?!?!?
+
 
 //Nota:
 //repensar conflictos? si los ves como una tupla, podes ahorrarte tiempo con las busqeudas no?
@@ -263,3 +287,30 @@ public class Main {
         printer.flush();
 
         */
+
+        /* con el cambio de conflictos, esto quedo en legacy jajaj
+        
+        
+        
+        public static int encontrarDisponibilidad(ArrayList<Long> lista, int inicio){
+        //es como una busqueda binaria pero particular
+        //devuelve el primer hueco que encuentre
+        int izquierda = inicio;
+        int derecha = lista.size()-1;
+
+        int utlimoConflictoValido = izquierda;
+        long valorIzquierda = lista.get(inicio);
+
+        while(izquierda <= derecha){
+            int medio = izquierda + (derecha - izquierda) /2;
+
+            if(lista.get(medio) == valorIzquierda + (medio - inicio)){
+                utlimoConflictoValido = medio;
+                izquierda = medio + 1;
+            }
+            else{
+                derecha = medio -1;
+            }
+        }
+    return utlimoConflictoValido;
+    } */
