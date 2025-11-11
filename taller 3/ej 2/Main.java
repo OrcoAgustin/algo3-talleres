@@ -102,13 +102,6 @@ public class Main {
         }
         res[0] = 0L;
 
-        //memo
-        long[] memo = new long[n];
-        for (int i = 0; i < n; i++) {
-            memo[i] = -1;
-        }
-
-
         restantes.add(new long[]{0L,0L});
 
         while(!restantes.isEmpty()){
@@ -116,12 +109,6 @@ public class Main {
             long[] actual = restantes.poll();
             long tiempoActual = actual[0];
             int planetaActual = (int) actual[1];
-
-            //ahorraria mas tiempo asi?
-            if(memo[planetaActual] != -1 && tiempoActual >=memo[planetaActual]){
-                continue;
-            }
-            memo[planetaActual] = tiempoActual;
 
             //ya calculado?
             if(tiempoActual > res[planetaActual]){
@@ -171,9 +158,9 @@ public class Main {
             int medio = (izquierda + derecha)/2;
             
             if(tiempoSalida < matrizDeConflictos[planetaActual].get(medio)[0]){
-                derecha = medio + 1; 
+                derecha = medio - 1; 
             }
-            else if(tiempoSalida > matrizDeConflictos[planetaActual].get(medio)[0]){
+            else if(tiempoSalida > matrizDeConflictos[planetaActual].get(medio)[1]){
                 izquierda = medio + 1; 
             }
             else{
@@ -181,9 +168,21 @@ public class Main {
                 return tiempoSalida;
             }
         }
+        
+        //como el tp toma al menos 1 seg si cayese justo en el borde tendria que esperar
+        if(izquierda < matrizDeConflictos[planetaActual].size() &&
+         tiempoSalida == matrizDeConflictos[planetaActual].get(izquierda)[0]-1){
+            return matrizDeConflictos[planetaActual].get(izquierda)[1] + 1; 
+         } 
+        
         return tiempoSalida;
     }
 }
+//otro tle pero este es resolvible crep porque pensalo asi si caemos justo antes del intervalo, igual 
+//hay que esperar porque el tp toma >0 segs entonces si pasa eso dijkstra vuelve a llamar,
+// queremos que no llame de mas. algun catch deberia funcionar supongo yo
+
+
 //idea magistral, cambia la f de encontrar tiempo y sumale busqueda binaria adentro
 //descenso a la locura, ya no se que es
 
