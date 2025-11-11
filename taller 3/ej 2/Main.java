@@ -49,11 +49,11 @@ public class Main {
         //conflictos v2
 
         //indice es planeta-1 y las tuplas son donde empieza la ventana de ocupacion y donde termina
-        ArrayList<Long[]>[] matrizDeConflictos = new ArrayList[n];
+        ArrayList<long[]>[] matrizDeConflictos = new ArrayList[n];
         
         for (int i = 0; i < n; i++) {
             int cantidadDeConflictos = scanner.nextInt();
-            ArrayList<Long[]> nuevaLinea = new ArrayList<>();
+            ArrayList<long[]> nuevaLinea = new ArrayList<>();
 
             if (cantidadDeConflictos == 0) {
                 matrizDeConflictos[i] = nuevaLinea;
@@ -70,13 +70,13 @@ public class Main {
                     anterior = actual; 
                 } else {
                     
-                    nuevaLinea.add(new Long[]{inicio, anterior});
+                    nuevaLinea.add(new long[]{inicio, anterior});
                     inicio = actual;
                     anterior = actual;
                 }
             }
 
-            nuevaLinea.add(new Long[]{inicio, anterior});
+            nuevaLinea.add(new long[]{inicio, anterior});
             matrizDeConflictos[i] = nuevaLinea;
         }
 
@@ -85,7 +85,7 @@ public class Main {
         printer.flush();
     }
 
-    public static long pasosHastaM(ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long[]>[] matrizDeConflictos){
+    public static long pasosHastaM(ArrayList<long[]>[] listaDeAdyacencia, ArrayList<long[]>[] matrizDeConflictos){
         //dijkstra v2 (echu's dream)
         //proba si pasa con matriz, sino sufrimos con la queue
         //yo del futuro: no funciona. Usa queue
@@ -142,7 +142,7 @@ public class Main {
     }
     
     //CREO el problema esta aca, es lineal toma demasiado. Pensa como mejorarlo
-    public static long encontrarTiempo(long  tiempoLlegada, int planetaActual, ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long[]>[] matrizDeConflictos ){ 
+    public static long encontrarTiempo(long  tiempoLlegada, int planetaActual, ArrayList<long[]>[] listaDeAdyacencia, ArrayList<long[]>[] matrizDeConflictos ){ 
         //si le implementas busqueda binaria en otra f re sale segun tobi
         long tiempoSalida = tiempoLlegada;
 
@@ -168,16 +168,18 @@ public class Main {
                 return tiempoSalida;
             }
         }
-        
-        //como el tp toma al menos 1 seg si cayese justo en el borde tendria que esperar
-        if(izquierda < matrizDeConflictos[planetaActual].size() &&
-         tiempoSalida == matrizDeConflictos[planetaActual].get(izquierda)[0]-1){
-            return matrizDeConflictos[planetaActual].get(izquierda)[1] + 1; 
-         } 
-        
         return tiempoSalida;
     }
 }
+
+/* DELIRIO, QUE HACES?!?
+ * //como el tp toma al menos 1 seg si cayese justo en el borde tendria que esperar
+        if(izquierda < matrizDeConflictos[planetaActual].size()){
+            if(tiempoSalida == matrizDeConflictos[planetaActual].get(izquierda)[0]-1){
+                return matrizDeConflictos[planetaActual].get(izquierda)[1] + 1; 
+            }
+        } 
+*/
 //otro tle pero este es resolvible crep porque pensalo asi si caemos justo antes del intervalo, igual 
 //hay que esperar porque el tp toma >0 segs entonces si pasa eso dijkstra vuelve a llamar,
 // queremos que no llame de mas. algun catch deberia funcionar supongo yo
