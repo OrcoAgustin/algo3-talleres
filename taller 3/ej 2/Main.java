@@ -1,26 +1,51 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 
 public class Main {
+    //esto deberia mejorar velocidad, se usa en programacion competitiva
+    static class FastReader {
+      
+        BufferedReader b;
+        StringTokenizer s; 
 
+        public FastReader() {
+            b = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (s == null || !s.hasMoreElements()) {
+                try {
+                    s = new StringTokenizer(b.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace(); 
+                }
+            }
+            return s.nextToken();
+        }
+        int nextInt() { 
+            return Integer.parseInt(next()); 
+        }
+
+        long nextLong() { 
+            return Long.parseLong(next()); 
+        }
+    }
     public static void main ( String [] args ) {
-        //lector de entrada
-        BufferedReader br = new BufferedReader( 
-            new InputStreamReader(System.in)
-        );
+        
         //lector de salida
         BufferedWriter bw = new BufferedWriter (
             new OutputStreamWriter ( System . out )
         );
         //scanner
-        Scanner scanner = new Scanner(br);
+        FastReader scanner = new FastReader();
         //printer
         PrintWriter printer = new PrintWriter(bw);
 
@@ -308,3 +333,8 @@ public static int busquedaBinaria(ArrayList<Long[]> lista, long objetivo){
         }
     return utlimoConflictoValido;
     } */
+
+    /*
+    
+    revisa para la clase de scanner y que sea mas rapida
+    https://www.geeksforgeeks.org/competitive-programming/fast-io-in-java-in-competitive-programming/ */
