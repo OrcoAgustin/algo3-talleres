@@ -30,33 +30,33 @@ public class Main {
 
         //aristas
 
-        ArrayList<Integer[]>[] listaDeAdyacencia = new ArrayList[n];        
+        ArrayList<long[]>[] listaDeAdyacencia = new ArrayList[n];        
         for (int i = 0; i < n; i++) {
-            listaDeAdyacencia[i] = new ArrayList<Integer[]>();
+            listaDeAdyacencia[i] = new ArrayList<long[]>();
         }
 
 
         for (int i = 0; i < m; i++) {
             int primerP = scanner.nextInt()-1;
             int segundoP = scanner.nextInt()-1;
-            Integer costo = scanner.nextInt();
+            long costo = scanner.nextLong();
 
-            listaDeAdyacencia[primerP].add(new Integer[]{segundoP,costo});
-            listaDeAdyacencia[segundoP].add(new Integer[]{primerP,costo});
+            listaDeAdyacencia[primerP].add(new long[]{segundoP,costo});
+            listaDeAdyacencia[segundoP].add(new long[]{primerP,costo});
         }
     
 
         //conflictos
 
         //indice es planeta-1 y los valores son los momentos donde esta ocupado
-        ArrayList<Integer>[] matrizDeConflictos = new ArrayList[n];
+        ArrayList<Long>[] matrizDeConflictos = new ArrayList[n];
         
         for (int i = 0; i < n; i++) {
-            ArrayList<Integer>  nuevaLinea = new ArrayList<>();
+            ArrayList<Long>  nuevaLinea = new ArrayList<>();
 
             int cantidadDeConflictos = scanner.nextInt();
             for (int j = 0; j < cantidadDeConflictos ; j++) {
-                int nuevoNum = scanner.nextInt();
+                long nuevoNum = scanner.nextLong();
                 nuevaLinea.add(nuevoNum);  
               
             }
@@ -69,30 +69,30 @@ public class Main {
         printer.flush();
     }
 
-    public static long pasosHastaM(ArrayList<Integer[]>[] listaDeAdyacencia, ArrayList<Integer>[] matrizDeConflictos){
+    public static long pasosHastaM(ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long>[] matrizDeConflictos){
         //dijkstra v2 (echu's dream)
         //proba si pasa con matriz, sino sufrimos con la queue
         //yo del futuro: no funciona. Usa queue
     
         int n = listaDeAdyacencia.length;
         //almacenar (tiempo, planeta)
-        PriorityQueue<int[]> restantes = new PriorityQueue<>(
-            (a, b) -> Integer.compare(a[0], b[0]) 
+        PriorityQueue<long[]> restantes = new PriorityQueue<>(
+            (a, b) -> Long.compare(a[0], b[0]) 
         );
 
-        int[] res = new int[n];
+        long[] res = new long[n];
         for (int i = 0; i < n; i++) {
-            res[i] = Integer.MAX_VALUE;
+            res[i] = Long.MAX_VALUE;
         }
-        res[0] = 0;
+        res[0] = 0L;
 
-        restantes.add(new int[]{0,0});
+        restantes.add(new long[]{0L,0L});
 
         while(!restantes.isEmpty()){
             
-            int[] actual = restantes.poll();
-            int tiempoActual = actual[0];
-            int planetaActual= actual[1];
+            long[] actual = restantes.poll();
+            long tiempoActual = actual[0];
+            int planetaActual = (int) actual[1];
 
             //ya calculado?
             if(tiempoActual > res[planetaActual]){
@@ -105,20 +105,18 @@ public class Main {
             }
             
             //calculamos el tiempo de salida
-            int tiempoSalida = encontrarTiempo(tiempoActual, planetaActual, listaDeAdyacencia, matrizDeConflictos);
-            
-
+            long tiempoSalida = encontrarTiempo(tiempoActual, planetaActual, listaDeAdyacencia, matrizDeConflictos);
             
             for (int i = 0; i < listaDeAdyacencia[planetaActual].size(); i++) {
                 //primero: planeta, segundo: costo de llegar
-                int planetaDestino = listaDeAdyacencia[planetaActual].get(i)[0];
-                int costoDeViaje =  listaDeAdyacencia[planetaActual].get(i)[1];
+                int planetaDestino = (int) listaDeAdyacencia[planetaActual].get(i)[0];
+                long costoDeViaje =  listaDeAdyacencia[planetaActual].get(i)[1];
                  
-                int nuevoTiempoDeLlegada = tiempoSalida + costoDeViaje;
+                long nuevoTiempoDeLlegada = tiempoSalida + costoDeViaje;
 
                 if (nuevoTiempoDeLlegada < res[planetaDestino]){
                     res[planetaDestino] = nuevoTiempoDeLlegada;
-                    restantes.add(new int[]{nuevoTiempoDeLlegada,planetaDestino});
+                    restantes.add(new long[]{(long) nuevoTiempoDeLlegada,(long) planetaDestino});
                 }
             }
         }
@@ -127,23 +125,20 @@ public class Main {
         return -1;
     }
     
-    public static int encontrarTiempo(int tiempoLlegada, int planetaActual, ArrayList<Integer[]>[] listaDeAdyacencia, ArrayList<Integer>[] matrizDeConflictos ){ 
+    //CREO el problema esta aca, es lineal toma demasiado. Pensa como mejorarlo
+    public static long encontrarTiempo(long  tiempoLlegada, int planetaActual, ArrayList<long[]>[] listaDeAdyacencia, ArrayList<Long>[] matrizDeConflictos ){ 
         //si le implementas busqueda binaria en otra f re sale segun tobi
-        int tiempoSalida = tiempoLlegada;
-        //catch por si esta vacia
+        long tiempoSalida = tiempoLlegada;
 
+        //catch por si esta vacia
         if(matrizDeConflictos[planetaActual].isEmpty()){
             return tiempoSalida;
         }
 
         int indice = busquedaBinaria(matrizDeConflictos[planetaActual], tiempoSalida);
 
-        if(indice == -1){
-            return tiempoLlegada;
-        }
-
         while(indice < matrizDeConflictos[planetaActual].size()){
-            int conflicto = matrizDeConflictos[planetaActual].get(indice);
+            long conflicto = matrizDeConflictos[planetaActual].get(indice);
             if(conflicto==tiempoSalida){
                 tiempoSalida ++;
                 indice ++;
@@ -156,15 +151,15 @@ public class Main {
         return tiempoSalida;
     }
 
-    public static int busquedaBinaria(ArrayList<Integer> lista, int objetivo){
+    public static int busquedaBinaria(ArrayList<Long> lista, long objetivo){
         
         int izquierda = 0;
-        int derecha = lista.size()-1;
+        int derecha = lista.size();
 
         while (izquierda < derecha){
             int indice = (izquierda + (derecha-izquierda))/2;
 
-            int valor = lista.get(indice);
+            long valor = lista.get(indice);
 
             if(valor < objetivo){
                 izquierda = indice + 1;
@@ -178,7 +173,7 @@ public class Main {
     }
 }
 
-
+//LOS INT TIENEN LIMITE; CABEZA DE TERMO USA LONG :)
 
  /*
     public static int encontrarTiempo(int tiempoLlegada, int planetaActual, ArrayList<Integer[]>[] listaDeAdyacencia, ArrayList<Integer>[] matrizDeConflictos ){ 
