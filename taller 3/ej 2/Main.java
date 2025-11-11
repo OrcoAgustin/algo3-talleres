@@ -197,7 +197,8 @@ public class Main {
     }
 }
 
-
+//Nota:
+//repensar conflictos? si los ves como una tupla, podes ahorrarte tiempo con las busqeudas no?
 
 //LOS INT TIENEN LIMITE; CABEZA DE TERMO USA LONG :)
 
